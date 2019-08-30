@@ -9,7 +9,42 @@ TODO: how to run
 
 Below is a concise explanation of how each major aspect of this application is organized.  Third party libraries are used where appropriate, in other cases it is merely convention.
 
-To be clear, these steps have already been done on this project, but are documented here a guide to show how to rapidly construct your own application following this convention.
+This guide describes each aspect so you can easily make changes to modify it for your needs.
+
+## Main and Setup with Wire
+
+The application executable lives at `cmd/widgetfactoryd`.
+
+To facilitate "wiring" your application as it grows, Google's [wire](https://github.com/google/wire) package is used.
+A Setup function lives in wire.go and will look something like:
+
+```go
+func Setup() (*AppConfig, error) {
+	wire.Build(
+		NewMainStuff,
+		NewDBConnString,
+		NewDBDriverName,
+	)
+	return &MainStuff{}, nil
+}
+```
+
+You can add NewNNN calls to the list to have them automatically wired.  Running `go generate` will produce wire_gen.go with the actual wiring code.
+
+And then in main.go this Setup function is called to retrieve AppConfig and start the application:
+
+```go
+func main() {
+
+	appConfig, err := Setup()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+    // ...
+}
+```
+
 
 ## Vue UI
 
