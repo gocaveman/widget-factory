@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/julienschmidt/httprouter"
 	"github.com/spf13/viper"
 )
 
@@ -16,18 +17,20 @@ type DBDriverName string
 
 func NewDBDriverName() DBDriverName { return DBDriverName(viper.GetString("db-driver")) }
 
-func NewMainStuff(c DBConnString, d DBDriverName) (*MainStuff, error) {
+func NewMainStuff(c DBConnString, d DBDriverName, router *httprouter.Router) (*MainStuff, error) {
 	db, err := sql.Open(string(d), string(c))
 	if err != nil {
 		return nil, err
 	}
 	return &MainStuff{
-		DB: db,
+		DB:     db,
+		Router: router,
 	}, nil
 }
 
 type MainStuff struct {
-	DB *sql.DB
+	DB     *sql.DB
+	Router *httprouter.Router
 }
 
 func main() {
@@ -37,7 +40,5 @@ func main() {
 		log.Fatal(err)
 	}
 
-	log.Fatal(http.ListenAndServe(":8080", NewRouter(ProtocolREST)))
-
-	log.Printf("HERE: %#v", mainStuff)
+	log.Fatal(http.ListenAndServe(":8080", mainStuff.Router))
 }
