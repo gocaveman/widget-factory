@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"log"
+	"net/http"
 
 	"github.com/spf13/viper"
 )
@@ -35,6 +36,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	log.Fatal(http.ListenAndServe(":8080", NewRouter(ProtocolREST)))
 
 	log.Printf("HERE: %#v", mainStuff)
 }
