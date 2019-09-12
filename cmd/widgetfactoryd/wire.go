@@ -7,11 +7,11 @@ import "github.com/google/wire"
 func Setup() (*MainStuff, error) {
 
 	wire.Build(
-		NewSampleController(),
+		NewWidgetController,
 		NewMainStuff,
 		NewDBConnString,
 		NewDBDriverName,
-		NewRouter(),
+		NewWidgetRouter,
 	)
 
 	return &MainStuff{}, nil

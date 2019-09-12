@@ -5,12 +5,18 @@
 
 package main
 
+import (
+	_ "github.com/go-sql-driver/mysql"
+)
+
 // Injectors from wire.go:
 
 func Setup() (*MainStuff, error) {
 	dbConnString := NewDBConnString()
 	dbDriverName := NewDBDriverName()
-	mainStuff, err := NewMainStuff(dbConnString, dbDriverName)
+	widgetController := NewWidgetController()
+	router := NewWidgetRouter(widgetController)
+	mainStuff, err := NewMainStuff(dbConnString, dbDriverName, router)
 	if err != nil {
 		return nil, err
 	}
