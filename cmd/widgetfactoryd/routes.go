@@ -20,6 +20,9 @@ func NewWidgetRouter(ctrl *WidgetController) *httprouter.Router {
 
 	r := httprouter.New()
 	r.HandlerFunc("GET", "/widget", ctrl.List)
+	r.HandlerFunc("GET", "/widget/count", ctrl.GetLimitCount)
+	r.HandlerFunc("GET", "/widget/create", ctrl.Create)
+	r.HandlerFunc("GET", "/widget/get/:id", ctrl.GetOne)
 
 	return r
 

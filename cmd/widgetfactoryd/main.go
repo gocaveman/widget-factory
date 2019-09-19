@@ -1,7 +1,5 @@
 package main
 
-//go:generate sqlboiler --wipe mysql
-
 import (
 	"database/sql"
 	"log"
@@ -28,6 +26,14 @@ func NewMainStuff(c DBConnString, d DBDriverName, router *httprouter.Router) (*M
 		DB:     db,
 		Router: router,
 	}, nil
+}
+
+func NewDBConn(connString DBConnString, name DBDriverName) *sql.DB {
+	db, err := sql.Open(string(name), string(connString))
+	if err != nil {
+		panic(err)
+	}
+	return db
 }
 
 type MainStuff struct {

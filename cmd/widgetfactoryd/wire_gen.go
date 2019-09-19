@@ -6,6 +6,10 @@
 package main
 
 import (
+	"github.com/gocaveman/widget-factory/cmd/widgetfactoryd/store"
+)
+
+import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -14,7 +18,9 @@ import (
 func Setup() (*MainStuff, error) {
 	dbConnString := NewDBConnString()
 	dbDriverName := NewDBDriverName()
-	widgetController := NewWidgetController()
+	db := NewDBConn(dbConnString, dbDriverName)
+	storeStore := store.NewStore(db)
+	widgetController := NewWidgetController(db, storeStore)
 	router := NewWidgetRouter(widgetController)
 	mainStuff, err := NewMainStuff(dbConnString, dbDriverName, router)
 	if err != nil {
