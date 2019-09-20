@@ -24,7 +24,29 @@ func NewWidgetController(DB *sql.DB, store *store.Store) *WidgetController {
 }
 
 func (c *WidgetController) Create(w http.ResponseWriter, r *http.Request) {
-
+ate
+	panic(`Leaving this here as a really important question to go over with Calvin:
+	We should really consider the approach of using panics as a valid handling for
+	"unrecoverable errors" in handlers.  Usually in a handler there are one or two error
+	conditions that must be reported to the user, e.g. the record you asked for was not found,
+	or the name of this record you are providing is invalid, or you don't have access.  
+	Those should get specific error
+	codes and be reported to the user.  Then there are a bunch of other error cases that
+	have nothing to do with actual application logic - your select statement failed because
+	the db went away, your fields are all whacked so json.Encoded didn't work on your response,
+	some other external service stopped working (although this one could go either way).
+	The point is: Some errors the user need to know about and might need their own response code.
+	And other errors could really just be panics and the panic handler (see the httprouter package),
+	could be set up to log and/or return the panic in dev mode, or just log it in production and
+	respond with a generic 500 error.
+	Then we could be doing things more like: must(widget.Select()...) 
+	(the point being that must() can check for error and panic).
+	Error handling would be less verbose and you'd actually get much better error logging for
+	these miscellaneous cases like the db went away or json.Encode failed, etc.  Plus we don't
+	leak error messages to the user unless in dev mode - handles that problem too.  This is something
+	we should factor into this pattern.
+	`)
+	
 	var widget store.Widget
 	widget.WidgetID = RandStringBytes(16)
 	widget.Description = RandStringBytes(16)
