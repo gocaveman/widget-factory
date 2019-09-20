@@ -24,7 +24,7 @@ func NewWidgetController(DB *sql.DB, store *store.Store) *WidgetController {
 }
 
 func (c *WidgetController) Create(w http.ResponseWriter, r *http.Request) {
-ate
+
 	panic(`Leaving this here as a really important question to go over with Calvin:
 	We should really consider the approach of using panics as a valid handling for
 	"unrecoverable errors" in handlers.  Usually in a handler there are one or two error
