@@ -12,3 +12,9 @@
 *.out
 
 .vscode
+
+.idea
+
+.DS_Store
+
+local-docker
