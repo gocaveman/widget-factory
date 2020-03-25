@@ -30,9 +30,9 @@ func (c *WidgetController) Create(w http.ResponseWriter, r *http.Request) {
 	widget.Description = RandStringBytes(16)
 	widget.Name = RandStringBytes(16)
 
-	err := c.Store.Widget.Insert(r.Context(), &widget)
-	if err != nil {
+	if err := c.Store.Widget().Insert(r.Context(), &widget); err != nil {
 		writeError(w, err.Error())
+		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -42,7 +42,7 @@ func (c *WidgetController) Create(w http.ResponseWriter, r *http.Request) {
 
 func (c *WidgetController) List(w http.ResponseWriter, r *http.Request) {
 
-	widgets, err := c.Store.Widget.SelectLimit(r.Context(), 0)
+	widgets, err := c.Store.Widget().SelectLimit(r.Context(), 0)
 	if err != nil {
 		writeError(w, err.Error())
 		return
@@ -55,7 +55,7 @@ func (c *WidgetController) List(w http.ResponseWriter, r *http.Request) {
 
 func (c *WidgetController) GetOne(w http.ResponseWriter, r *http.Request) {
 
-	widget, err := c.Store.Widget.SelectOne(r.Context(), "1")
+	widget, err := c.Store.Widget().SelectOne(r.Context(), "1")
 	if err != nil {
 		writeError(w, err.Error())
 		return
@@ -68,7 +68,7 @@ func (c *WidgetController) GetOne(w http.ResponseWriter, r *http.Request) {
 
 func (c *WidgetController) GetLimitCount(w http.ResponseWriter, r *http.Request) {
 
-	widgets, count, err := c.Store.Widget.SelectLimitCount(r.Context(), 99)
+	widgets, count, err := c.Store.Widget().SelectLimitCount(r.Context(), 99)
 	if err != nil {
 		writeError(w, err.Error())
 		return

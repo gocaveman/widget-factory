@@ -8,15 +8,15 @@ import (
 func NewStore(DB *sql.DB) *Store {
 	return &Store{
 		DB: DB,
-		Widget: WidgetStore{
-			DB: DB,
-		},
 	}
 }
 
 type Store struct {
-	DB     *sql.DB
-	Widget WidgetStore
+	*sql.DB
+}
+
+func (store *Store) Widget() *WidgetStore {
+	return &WidgetStore{DB: store.DB}
 }
 
 type WidgetStore struct {
@@ -32,17 +32,12 @@ func (s *WidgetStore) Insert(ctx context.Context, o *Widget) error {
 
 	defer tx.Rollback()
 
-	stmt, err := tx.PrepareContext(ctx, "INSERT INTO widget(widget_id, name, description) VALUES(?, ?, ?)")
-	if err != nil {
-		return err
-	}
-
-	_, err = stmt.ExecContext(ctx, o.WidgetID, o.Name, o.Description)
-	if err != nil {
+	if _, err := tx.ExecContext(ctx, "INSERT INTO widget(widget_id, name, description) VALUES (?, ?, ?)", o.WidgetID, o.Name, o.Description); err != nil {
 		return err
 	}
 
 	return tx.Commit()
+
 }
 
 func (s *WidgetStore) Update(ctx context.Context, o *Widget) error {
@@ -54,12 +49,7 @@ func (s *WidgetStore) Update(ctx context.Context, o *Widget) error {
 
 	defer tx.Rollback()
 
-	stmt, err := tx.PrepareContext(ctx, "UPDATE widget set name = ?, description = ? where widget_id = ?")
-	if err != nil {
-		return err
-	}
-
-	_, err = stmt.ExecContext(ctx, o.Name, o.Description, o.WidgetID)
+	_, err = tx.ExecContext(ctx, "UPDATE widget set name = ?, description = ? where widget_id = ?", o.Name, o.Description, o.WidgetID)
 	if err != nil {
 		return err
 	}
@@ -77,12 +67,7 @@ func (s *WidgetStore) Delete(ctx context.Context, id string) error {
 
 	defer tx.Rollback()
 
-	stmt, err := tx.PrepareContext(ctx, "DELETE FROM widget where widget_id = ?")
-	if err != nil {
-		return err
-	}
-
-	_, err = stmt.ExecContext(ctx, id)
+	_, err = tx.ExecContext(ctx, "DELETE FROM widget where widget_id = ?", id)
 	if err != nil {
 		return err
 	}
