@@ -73,3 +73,19 @@ TODO (describe how to wire the endpoints so the dev UI and prod UI can sensibly 
 ### Reusability in Other Vue Apps
 
 Vue components that may be re-used by other Vue applications wishing to embed portions of relevant UI functionality can simple be imported at the appropriate path, i.e. in JS in another Vue project `import "path/to/appui/components/SomeComponent.Vue"`.
+
+
+### Controllers &amp; Routing
+
+
+Routing is done in the `routes.go` file.  Using `github.com/julienschmidt/httprouter`.  To add a new Route:
+
+
+Controllers are 
+
+
+
+
+
+### Model Generation
+
